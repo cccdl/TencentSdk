@@ -1,0 +1,22 @@
+{
+    "name": "cccdl/tencent-sdk",
+    "description": "腾讯云SDK for PHP",
+    "type": "composer-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "dl",
+            "email": "568078220@qq.com",
+            "role": "Developer"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+
+    },
+    "autoload": {
+        "psr-4": {
+            "cccdl\\TencentSdk\\": "./src/"
+        }
+    }
+}
