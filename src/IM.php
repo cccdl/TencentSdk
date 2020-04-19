@@ -1,6 +1,6 @@
 <?php
 
-namespace cccdl\TencentSdk;
+namespace cccdl\tencent_sdk;
 
 class IM
 {
