@@ -11,6 +11,6 @@ class IM
 
     public static function hello()
     {
-        echo 'hello';
+        echo 'hello11';
     }
 }
