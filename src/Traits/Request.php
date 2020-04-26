@@ -1,13 +1,8 @@
 <?php
 
-namespace cccdl\tencentSdk\Traits;
+namespace cccdl\tencent_sdk\Traits;
 
-use GuzzleHttp\Client;
 
 trait Request
 {
-    public function getNew()
-    {
-        return new static;
-    }
 }

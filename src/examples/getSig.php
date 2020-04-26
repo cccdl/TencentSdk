@@ -1,8 +1,8 @@
 <?php
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-use cccdl\tencentSdk\Exception\cccdlException;
-use cccdl\tencentSdk\Im\Im;
+use cccdl\tencent_sdk\Exception\cccdlException;
+use cccdl\tencent_sdk\Im\Im;
 
 try {
 

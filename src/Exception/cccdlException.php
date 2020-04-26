@@ -1,7 +1,7 @@
 <?php
 
 
-namespace cccdl\tencentSdk\Exception;
+namespace cccdl\tencent_sdk\Exception;
 
 use Exception;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace cccdl\tencentSdk;
+namespace cccdl\tencent_sdk;
 
 class Auth
 {

@@ -1,5 +1,5 @@
 {
-    "name": "cccdl/tencentSdk",
+    "name": "cccdl/tencent_sdk",
     "description": "腾讯云SDK for PHP",
     "type": "composer-plugin",
     "license": "MIT",
@@ -16,7 +16,7 @@
     },
     "autoload": {
         "psr-4": {
-            "cccdl\\tencentSdk\\": "./src/"
+            "cccdl\\tencent_sdk\\": "./src/"
         }
     }
 }

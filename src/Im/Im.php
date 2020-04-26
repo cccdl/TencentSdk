@@ -1,9 +1,9 @@
 <?php
 
-namespace cccdl\tencentSdk\Im;
+namespace cccdl\tencent_sdk\Im;
 
-use cccdl\tencentSdk\Auth;
-use cccdl\tencentSdk\Traits\Request;
+use cccdl\tencent_sdk\Auth;
+use cccdl\tencent_sdk\Traits\Request;
 
 class Im extends Auth
 {
