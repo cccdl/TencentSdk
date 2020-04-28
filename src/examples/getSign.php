@@ -6,14 +6,16 @@ use cccdl\tencent_sdk\Im\Im;
 
 try {
 
-    $appId = '1400308341';
+    $appId = '';
 
-    $key = '1400308341';
+    $key = '';
 
     $im = new Im($appId, $key);
 
-    var_dump($im);
-    die;
+    $sign = $im->genSign('1000001');
+
+    echo $sign;
+
 } catch (cccdlException $e) {
     echo $e->getMessage();
 }

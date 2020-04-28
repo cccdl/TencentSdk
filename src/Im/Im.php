@@ -9,8 +9,4 @@ class Im extends Auth
 {
     use Request;
 
-    public function a()
-    {
-        echo $this->genSig();
-    }
 }
