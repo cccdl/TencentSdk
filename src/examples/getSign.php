@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use cccdl\tencent_sdk\Exception\cccdlException;
@@ -6,13 +7,18 @@ use cccdl\tencent_sdk\Im\Im;
 
 try {
 
+    //IM appid
     $appId = '';
 
+    //IM key
     $key = '';
 
-    $im = new Im($appId, $key);
+    // 用户id
+    $identifier = '';
 
-    $sign = $im->genSign('1000001');
+    $im = new Im($appId, $key, $identifier);
+
+    $sign = $im->getSign($identifier);
 
     echo $sign;
 

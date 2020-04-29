@@ -1,8 +1,9 @@
 <?php
+
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use cccdl\tencent_sdk\Exception\cccdlException;
-use cccdl\tencent_sdk\Im\Im;
+use cccdl\tencent_sdk\Im\imOpenLoginSvc;
 
 try {
 
@@ -15,12 +16,10 @@ try {
     // 用户id
     $identifier = '';
 
-    $im = new Im($appId, $key, $identifier);
+    $im = new imOpenLoginSvc($appId, $key, $identifier);
 
-    $sign = $im->genSigWithUserBuf($identifier, 'a');
-
-    echo $sign;
+    $im->accountImport('1111111', 'niho', '/avatar.png');
 
 } catch (cccdlException $e) {
-    echo $e->getMessage();
 }
+
