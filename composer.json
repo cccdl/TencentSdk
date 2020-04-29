@@ -1,7 +1,7 @@
 {
     "name": "cccdl/tencent_sdk",
     "description": "腾讯云SDK for PHP",
-    "type": "composer-plugin",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
