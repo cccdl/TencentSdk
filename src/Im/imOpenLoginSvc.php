@@ -3,6 +3,8 @@
 namespace cccdl\tencent_sdk\Im;
 
 
+use cccdl\tencent_sdk\Traits\Request;
+
 class imOpenLoginSvc extends Im
 {
 
@@ -21,7 +23,16 @@ class imOpenLoginSvc extends Im
     public function accountImport($Identifier, $Nick, $FaceUrl)
     {
         $this->command = 'account_import';
+
         $url = $this->getUrl();
+
+        $param = [
+            'Identifier' => $Identifier,
+            'Nick' => $Nick,
+            'FaceUrl' => $FaceUrl,
+        ];
+
+        return Request::post($url, $param);
 
 
     }

@@ -8,17 +8,19 @@ use cccdl\tencent_sdk\Im\imOpenLoginSvc;
 try {
 
     //IM appid
-    $appId = '';
+    $appId = '1400308341';
 
     //IM key
-    $key = '';
+    $key = '9f1bdccf37831fa09463e92e93b9944ce92c970c29377182435307407b50bc05';
 
     // 用户id
-    $identifier = '';
+    $identifier = 'long';
 
     $im = new imOpenLoginSvc($appId, $key, $identifier);
 
-    $im->accountImport('1111111', 'niho', '/avatar.png');
+    $res = $im->accountImport('1000001', '这是个昵称', 'upload/avatar/1/1.jpg');
+
+    var_dump($res);
 
 } catch (cccdlException $e) {
 }
