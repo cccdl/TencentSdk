@@ -5,6 +5,11 @@ namespace cccdl\tencent_sdk\Im;
 
 use cccdl\tencent_sdk\Traits\Request;
 
+/**
+ * 账号管理
+ * Class imOpenLoginSvc
+ * @package cccdl\tencent_sdk\Im
+ */
 class imOpenLoginSvc extends Im
 {
 
