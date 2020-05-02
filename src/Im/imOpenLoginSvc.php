@@ -32,11 +32,15 @@ class imOpenLoginSvc extends Im
 
         $url = $this->getUrl();
 
-        $param = [
-            'Identifier' => $Identifier,
-            'Nick' => $Nick,
-            'FaceUrl' => $FaceUrl,
-        ];
+        $param['Identifier'] = $Identifier;
+
+        if (!empty($Nick)) {
+            $param['Nick'] = $Nick;
+        }
+
+        if (!empty($FaceUrl)) {
+            $param['FaceUrl'] = $FaceUrl;
+        }
 
         return Request::post($url, $param);
 
