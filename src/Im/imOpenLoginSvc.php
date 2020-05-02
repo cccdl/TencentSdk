@@ -19,8 +19,9 @@ class imOpenLoginSvc extends Im
      * @param String $Identifier 用户名，长度不超过32字节
      * @param String $Nick 用户昵称
      * @param String $FaceUrl 用户头像 URL
+     * @return array
      */
-    public function accountImport($Identifier, $Nick, $FaceUrl)
+    public function accountImport($Identifier, $Nick = '', $FaceUrl = '')
     {
         $this->command = 'account_import';
 

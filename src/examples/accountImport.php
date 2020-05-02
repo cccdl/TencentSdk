@@ -8,13 +8,13 @@ use cccdl\tencent_sdk\Im\imOpenLoginSvc;
 try {
 
     //IM appid
-    $appId = '1400308341';
+    $appId = '';
 
     //IM key
-    $key = '9f1bdccf37831fa09463e92e93b9944ce92c970c29377182435307407b50bc05';
+    $key = '';
 
     // 用户id
-    $identifier = 'long';
+    $identifier = '';
 
     $im = new imOpenLoginSvc($appId, $key, $identifier);
 
