@@ -42,8 +42,6 @@ class imOpenLoginSvc extends Im
             $param['FaceUrl'] = $FaceUrl;
         }
 
-        Request::post($url, $param);
-
         return Request::post($url, $param);
 
 
