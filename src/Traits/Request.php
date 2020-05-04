@@ -3,6 +3,7 @@
 namespace cccdl\tencent_sdk\Traits;
 
 
+use cccdl\tencent_sdk\Exception\cccdlException;
 use GuzzleHttp\Client;
 
 trait Request
@@ -15,6 +16,18 @@ trait Request
 
         $response = $client->post($url, ['json' => $param]);
 
-        return ['code' => $response->getStatusCode(), 'data' => json_decode($response->getBody(), true)];
+        $code = $response->getStatusCode();
+
+        if ($response->getStatusCode() != 200) {
+            throw new cccdlException('请求失败！', $code);
+        }
+
+        $body = json_decode($response->getBody(), true);
+
+        if ($body['ActionStatus'] != 'OK') {
+            throw new cccdlException($body['ErrorInfo'], $body['ErrorCode']);
+        }
+
+        return ['code' => $code, 'data' => json_decode($response->getBody(), true)];
     }
 }
