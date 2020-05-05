@@ -1,8 +1,9 @@
 <?php
+
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use cccdl\tencent_sdk\Exception\cccdlException;
-use cccdl\tencent_sdk\Im\Im;
+use cccdl\tencent_sdk\Im\imOpenLoginSvc;
 
 try {
 
@@ -12,17 +13,18 @@ try {
     //IM key
     $key = '';
 
-    // 用户id
+    // 管理员账号
     $identifier = '';
 
-    $im = new Im($appId, $key, $identifier);
+    $im = new imOpenLoginSvc($appId, $key, $identifier);
 
-    $sign = $im->genSigWithUserBuf($identifier, 'a');
+    $res = $im->kick('1000001');
 
-    echo $sign;
+    var_dump($res);
 
 } catch (cccdlException $e) {
     echo $e->getCode();
     echo '----';
     echo $e->getMessage();
 }
+

@@ -23,5 +23,7 @@ try {
     echo $sign;
 
 } catch (cccdlException $e) {
+    echo $e->getCode();
+    echo '----';
     echo $e->getMessage();
 }

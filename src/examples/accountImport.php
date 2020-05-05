@@ -13,7 +13,7 @@ try {
     //IM key
     $key = '';
 
-    // 用户id
+    // 管理员账号
     $identifier = '';
 
     $im = new imOpenLoginSvc($appId, $key, $identifier);
@@ -23,5 +23,8 @@ try {
     var_dump($res);
 
 } catch (cccdlException $e) {
+    echo $e->getCode();
+    echo '----';
+    echo $e->getMessage();
 }
 

@@ -8,7 +8,7 @@ use GuzzleHttp\Client;
 
 trait Request
 {
-    protected static $timeout = 2;
+    protected static $timeout = 3;
 
     public static function post($url, $param)
     {
@@ -23,6 +23,7 @@ trait Request
         }
 
         $body = json_decode($response->getBody(), true);
+
 
         if ($body['ActionStatus'] != 'OK') {
             throw new cccdlException($body['ErrorInfo'], $body['ErrorCode']);
