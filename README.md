@@ -1,18 +1,51 @@
-<h1 align="center"> 腾讯云服务端 SDK for PHP </h1>
+#腾讯云服务端 SDK for PHP  ![](https://imgcache.qq.com/open_proj/proj_qcloud_v2/gateway/portal/css/img/nav/logo-bg-color.svg)
+###### 目前没有找到任何相关腾讯云服务端api-sdk，类似的composer包又只包含部分内容，所以自己开发一个composer包，方便大家使用，正在开发中
 
-<p align="center">目前没有找到任何相关腾讯云服务端api-sdk，类似的composer包又只包含部分内容，所以自己开发一个composer包，方便大家使用，正在开发中</p>
+### 主要新特性
 
+* 采用新版本签名算法（如果您的 SDKAppID 是2019.07.19之前创建的，建议升级为 HMAC-SHA256 算法）
+* 仅抛出请求错误异常、请求失败异常、其余原样返回
+
+### 更新日志
+- 1.0.5 腾讯IM即时通讯（增加账号管理相关接口）
 
 ## 安装
-
+> 运行环境要求PHP7.1+。
 ```shell
 $ composer require cccdl/tencent_sdk
+```
+
+### 接口对应文件
+
+| 文件                       | 方法                 |  说明    |
+| :-----------------------  | --------------         |  :----    |
+| imOpenLoginSvc.php        | `accountImport()`       | 导入单个帐号 |
+| imOpenLoginSvc.php        | `multiAccountImport()`  | 导入多个帐号 |
+| imOpenLoginSvc.php        | `accountDelete()`      | 删除帐号    |
+| imOpenLoginSvc.php        | `accountCheck()`       | 查询帐号    |
+| imOpenLoginSvc.php        | `kick()`               | 失效帐号登录态 |
+| imOpenLoginSvc.php        | `queryState()`         | 查询帐号在线状态 |
+
+### 快速使用
+在您开始之前，您需要注册腾讯云并获取您的[凭证](https://console.cloud.tencent.com)。
+
+
+```php
+<?php
+
+use cccdl\tencent_sdk\Im\imOpenLoginSvc;
+
+$im = new imOpenLoginSvc($appId, $key, $identifier);
+
+$res = $im->queryState(['1000001', '1000002']);
 ```
 
 ## 文档
 
 [腾讯云文档中心](https://cloud.tencent.com/document/product)
 
+## 问题
+[提交 Issue](https://github.com/cccdl/tencent_sdk/issues)，不符合指南的问题可能会立即关闭。
 
 
 ## Contributing
