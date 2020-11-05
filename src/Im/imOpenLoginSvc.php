@@ -15,21 +15,21 @@ class imOpenLoginSvc extends Im
 {
 
     /**
-     * 内部服务名，不同的 servicename 对应不同的服务类型
+     * 内部服务名，不同的 serviceName 对应不同的服务类型
      * @var string
      */
-    protected $servicename = 'im_open_login_svc';
+    protected $serviceName = 'im_open_login_svc';
 
     /**
      * 导入单个帐号
      * 本接口用于将 App 自有帐号导入即时通信 IM 帐号系统，为该帐号创建一个对应的内部 ID，使该帐号能够使用即时通信 IM 服务。
      * @param String $Identifier 用户名，长度不超过32字节
-     * @param String $Nick 用户昵称
+     * @param string $nickName 昵称
      * @param String $FaceUrl 用户头像 URL
      * @return array
      * @throws cccdlException
      */
-    public function accountImport($Identifier, $Nick = '', $FaceUrl = '')
+    public function accountImport(string $Identifier, $nickName = '', $FaceUrl = '')
     {
         $this->command = 'account_import';
 
@@ -38,7 +38,7 @@ class imOpenLoginSvc extends Im
         $param['Identifier'] = (string)$Identifier;
 
         if (!empty($Nick)) {
-            $param['Nick'] = (string)$Nick;
+            $param['Nick'] = (string)$nickName;
         }
 
         if (!empty($FaceUrl)) {
@@ -137,7 +137,7 @@ class imOpenLoginSvc extends Im
      */
     public function queryState(array $To_Account, $IsNeedDetail = 0)
     {
-        $this->servicename = 'openim';
+        $this->serviceName = 'openim';
         $this->command = 'querystate';
 
         $url = $this->getUrl();

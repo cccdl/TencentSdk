@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace cccdl\tencent_sdk\Im;
 
@@ -22,13 +23,13 @@ class Im
     private $ver = 'v4';
 
     /**
-     * 内部服务名，不同的 servicename 对应不同的服务类型
+     * 内部服务名，不同的 serviceName 对应不同的服务类型
      * @var string
      */
-    protected $servicename;
+    protected $serviceName;
 
     /**
-     * 命令字，与 servicename 组合用来标识具体的业务功能
+     * 命令字，与 serviceName 组合用来标识具体的业务功能
      * @var string
      */
     protected $command;
@@ -37,7 +38,7 @@ class Im
      * App 在即时通信 IM 控制台获取的应用标识
      * @var string
      */
-    private $sdkappid;
+    private $sdkAppid;
 
     /**
      * 密钥
@@ -55,7 +56,7 @@ class Im
      * 用户名对应的密码
      * @var string
      */
-    private $usersig;
+    private $userSig;
 
     /**
      * 标识当前请求的随机数参数
@@ -67,27 +68,27 @@ class Im
      * 请求格式
      * @var string
      */
-    private $contenttype = 'json';
+    private $contentType = 'json';
 
     /**
      * 过期时间，单位秒，默认 180 天
-     *
      * @param int $expire
      */
     private $expire = 86400 * 180;
 
     /**
      * Auth constructor.
-     * @param string $sdkappid AppID
+     * @param string $sdkAppid AppID
      * @param string $key 密钥
      * @param string $identifier 用户管理员账号
+     * @throws cccdlException
      */
-    public function __construct($sdkappid, $key, $identifier)
+    public function __construct(string $sdkAppid, string $key, string $identifier)
     {
-        $this->sdkappid = $sdkappid;
+        $this->sdkAppid = $sdkAppid;
         $this->key = $key;
         $this->identifier = $identifier;
-        $this->usersig = $this->genSig();
+        $this->userSig = $this->getSign();
         $this->random = $this->getRandom();
     }
 
@@ -95,30 +96,65 @@ class Im
      * 生成需要请求的url
      * @return string
      */
-    protected function getUrl()
+    protected function getUrl(): string
     {
-        return sprintf("%s/%s/%s/%s?sdkappid=%d&identifier=%s&usersig=%s&random=%s&contenttype=%s",
+        return sprintf("%s/%s/%s/%s?sdkAppid=%d&identifier=%s&userSig=%s&random=%s&contentType=%s",
             $this->url,
             $this->ver,
-            $this->servicename,
+            $this->serviceName,
             $this->command,
-            $this->sdkappid,
+            $this->sdkAppid,
             $this->identifier,
-            $this->usersig,
+            $this->userSig,
             $this->random,
-            $this->contenttype,
+            $this->contentType,
         );
     }
 
     /**
      * 生成签名
-     *
+     * @param string $userBuf
+     * @param bool $userBufEnabled
      * @return string 签名字符串
      * @throws cccdlException
      */
-    public function genSig()
+    public function getSign($userBuf = '', $userBufEnabled = false)
     {
-        return $this->__genSig();
+        $currTime = time();
+
+        $sigArray = [
+            'TLS.ver' => '2.0',
+            'TLS.identifier' => strval($this->identifier),
+            'TLS.sdkappid' => intval($this->sdkAppid),
+            'TLS.expire' => intval($this->expire),
+            'TLS.time' => intval($currTime)
+        ];
+
+        $base64UserBuf = '';
+        if (true == $userBufEnabled) {
+            $base64UserBuf = base64_encode($userBuf);
+            $sigArray['TLS.userbuf'] = strval($base64UserBuf);
+        }
+
+        $sigArray['TLS.sig'] = $this->hmacSha256($currTime, $base64UserBuf, $userBufEnabled);
+
+        if ($sigArray['TLS.sig'] === false) {
+            throw new cccdlException('base64_encode error');
+        }
+
+        $jsonStrSign = json_encode($sigArray);
+        if ($jsonStrSign === false) {
+            throw new cccdlException('json_encode error');
+        }
+
+        $compressed = gzcompress($jsonStrSign);
+        if ($compressed === false) {
+            throw new cccdlException('gzcompress error');
+        }
+
+        return $this->base64UrlEncode($compressed);
+
+
     }
 
 
@@ -138,7 +174,7 @@ class Im
      * @return string 编码后的base64串，失败返回false
      * @throws cccdlException
      */
-    private function base64_url_encode($string)
+    private function base64UrlEncode(string $string): string
     {
         static $replace = ['+' => '*', '/' => '-', '=' => '_'];
         $base64 = base64_encode($string);
@@ -155,7 +191,7 @@ class Im
      * @return string 解码后的数据，失败返回false
      * @throws cccdlException
      */
-    private function base64_url_decode($base64)
+    private function base64UrlDecode(string $base64): string
     {
         static $replace = ['+' => '*', '/' => '-', '=' => '_'];
         $string = str_replace(array_values($replace), array_keys($replace), $base64);
@@ -168,80 +204,36 @@ class Im
 
     /**
      * 使用 hmac sha256 生成 sig 字段内容，经过 base64 编码
-     * @param int $curr_time
-     * @param $base64_userbuf
-     * @param bool $userbuf_enabled
+     * @param $currTime
+     * @param $base64UserBuf
+     * @param bool $userBufEnabled
      * @return string base64 后的 sig
      */
-    private function hmacsha256($curr_time, $base64_userbuf, $userbuf_enabled = false)
+    private function hmacSha256($currTime, $base64UserBuf, $userBufEnabled = false)
     {
-        $content_to_be_signed = "TLS.identifier:" . $this->identifier . "\n"
-            . "TLS.sdkappid:" . $this->sdkappid . "\n"
-            . "TLS.time:" . $curr_time . "\n"
+        $contentToBeSigned = "TLS.identifier:" . $this->identifier . "\n"
+            . "TLS.sdkappid:" . $this->sdkAppid . "\n"
+            . "TLS.time:" . $currTime . "\n"
             . "TLS.expire:" . $this->expire . "\n";
 
-        if (true == $userbuf_enabled) {
-            $content_to_be_signed .= "TLS.userbuf:" . $base64_userbuf . "\n";
+        if ($userBufEnabled == true) {
+            $contentToBeSigned .= "TLS.userbuf:" . $base64UserBuf . "\n";
         }
 
-        return base64_encode(hash_hmac('sha256', $content_to_be_signed, $this->key, true));
+        return base64_encode(hash_hmac('sha256', $contentToBeSigned, $this->key, true));
     }
 
-    /**
-     * 生成签名。
-     *
-     * @param string $userbuf base64 编码后的 userbuf
-     * @param bool $userbuf_enabled 是否开启 userbuf
-     * @return string 签名字符串
-     * @throws cccdlException
-     */
-    private function __genSig($userbuf = '', $userbuf_enabled = false)
-    {
-        $curr_time = time();
-
-        $sig_array = [
-            'TLS.ver' => '2.0',
-            'TLS.identifier' => strval($this->identifier),
-            'TLS.sdkappid' => intval($this->sdkappid),
-            'TLS.expire' => intval($this->expire),
-            'TLS.time' => intval($curr_time)
-        ];
-
-        $base64_userbuf = '';
-        if (true == $userbuf_enabled) {
-            $base64_userbuf = base64_encode($userbuf);
-            $sig_array['TLS.userbuf'] = strval($base64_userbuf);
-        }
-
-        $sig_array['TLS.sig'] = $this->hmacsha256($curr_time, $base64_userbuf, $userbuf_enabled);
-
-        if ($sig_array['TLS.sig'] === false) {
-            throw new cccdlException('base64_encode error');
-        }
-
-        $json_str_sig = json_encode($sig_array);
-        if ($json_str_sig === false) {
-            throw new cccdlException('json_encode error');
-        }
-
-        $compressed = gzcompress($json_str_sig);
-        if ($compressed === false) {
-            throw new cccdlException('gzcompress error');
-        }
-
-        return $this->base64_url_encode($compressed);
-    }
 
     /**
      * 带 userbuf 生成签名。
      * @param string $userbuf 用户数据
-     * @param $userbuf_enabled
+     * @param $userBufEnabled
      * @return string 签名字符串
      * @throws cccdlException
      */
-    public function genSigWithUserBuf($userbuf, $userbuf_enabled)
+    public function genSigWithUserBuf($userbuf, $userBufEnabled)
     {
-        return $this->__genSig($userbuf, $userbuf_enabled);
+        return $this->__genSig($userbuf, $userBufEnabled);
     }
 
 
@@ -258,7 +250,7 @@ class Im
     {
         try {
             $error_msg = '';
-            $compressed_sig = $this->base64_url_decode($sig);
+            $compressed_sig = $this->base64UrlDecode($sig);
             $pre_level = error_reporting(E_ERROR);
             $uncompressed_sig = gzuncompress($compressed_sig);
             error_reporting($pre_level);
@@ -277,8 +269,8 @@ class Im
                 throw new cccdlException("identifier dosen't match");
             }
 
-            if ($sig_doc['TLS.sdkappid'] != $this->sdkappid) {
-                throw new cccdlException("sdkappid dosen't match");
+            if ($sig_doc['TLS.sdkAppid'] != $this->sdkAppid) {
+                throw new cccdlException("sdkAppid dosen't match");
             }
 
             $sig = $sig_doc['TLS.sig'];
@@ -294,14 +286,14 @@ class Im
                 throw new cccdlException('sig expired');
             }
 
-            $userbuf_enabled = false;
+            $userBufEnabled = false;
             $base64_userbuf = '';
             if (isset($sig_doc['TLS.userbuf'])) {
                 $base64_userbuf = $sig_doc['TLS.userbuf'];
                 $userbuf = base64_decode($base64_userbuf);
-                $userbuf_enabled = true;
+                $userBufEnabled = true;
             }
-            $sigCalculated = $this->hmacsha256($init_time, $base64_userbuf, $userbuf_enabled);
+            $sigCalculated = $this->hmacsha256($init_time, $base64_userbuf, $userBufEnabled);
 
             if ($sig != $sigCalculated) {
                 throw new cccdlException('verify failed');

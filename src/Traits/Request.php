@@ -10,6 +10,13 @@ trait Request
 {
     protected static $timeout = 3;
 
+    /**
+     * post请求
+     * @param $url
+     * @param $param
+     * @return array
+     * @throws cccdlException
+     */
     public static function post($url, $param)
     {
         $client = new Client(['timeout' => self::$timeout]);
