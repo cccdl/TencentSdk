@@ -4,14 +4,14 @@ namespace cccdl\tencent_sdk\Im;
 
 
 use cccdl\tencent_sdk\Exception\cccdlException;
-use cccdl\tencent_sdk\Traits\Request;
+
 
 /**
  * 账号管理
  * Class imOpenLoginSvc
  * @package cccdl\tencent_sdk\Im
  */
-class imOpenLoginSvc extends Im
+class ImOpenLoginSvc extends Im
 {
 
     /**
@@ -45,13 +45,13 @@ class imOpenLoginSvc extends Im
             $param['FaceUrl'] = (string)$FaceUrl;
         }
 
-        return Request::post($url, $param);
+        return $this->post($url, $param);
     }
 
     /**
      * 导入多个帐号
      * 本接口用于批量将 App 自有帐号导入即时通信 IM 帐号系统，为该帐号创建一个对应的内部 ID，使该帐号能够使用即时通信 IM 服务。
-     * @param array $Accounts 用户名，单个用户名长度不超过32字节，单次最多导入100个用户名
+     * @param array $Accounts 用户名数组，单个用户名长度不超过32字节，单次最多导入100个用户名
      * @return array
      * @throws cccdlException
      */
@@ -63,7 +63,7 @@ class imOpenLoginSvc extends Im
 
         $param['Accounts'] = $Accounts;
 
-        return Request::post($url, $param);
+        return $this->post($url, $param);
     }
 
     /**
@@ -85,7 +85,7 @@ class imOpenLoginSvc extends Im
             $param['DeleteItem'][] = ['UserID' => (string)$item];
         }
 
-        return Request::post($url, $param);
+        return $this->post($url, $param);
     }
 
     /**
@@ -105,7 +105,7 @@ class imOpenLoginSvc extends Im
             $param['CheckItem'][] = ['UserID' => (string)$item];
         }
 
-        return Request::post($url, $param);
+        return $this->post($url, $param);
     }
 
     /**
@@ -124,7 +124,7 @@ class imOpenLoginSvc extends Im
 
         $param['Identifier'] = (string)$Identifier;
 
-        return Request::post($url, $param);
+        return $this->post($url, $param);
     }
 
     /**
@@ -145,7 +145,7 @@ class imOpenLoginSvc extends Im
         $param['To_Account'] = $toAccount;
         $param['IsNeedDetail'] = $isNeedDetail;
 
-        return Request::post($url, $param);
+        return $this->post($url, $param);
     }
 
 }

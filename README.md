@@ -21,12 +21,12 @@ $ composer require cccdl/tencent_sdk
 
 | 文件                       | 方法                 |  说明    |
 | :-----------------------  | --------------         |  :----    |
-| imOpenLoginSvc.php        | `accountImport()`       | 导入单个帐号 |
-| imOpenLoginSvc.php        | `multiAccountImport()`  | 导入多个帐号 |
-| imOpenLoginSvc.php        | `accountDelete()`      | 删除帐号    |
-| imOpenLoginSvc.php        | `accountCheck()`       | 查询帐号    |
-| imOpenLoginSvc.php        | `kick()`               | 失效帐号登录态 |
-| imOpenLoginSvc.php        | `queryState()`         | 查询帐号在线状态 |
+| ImOpenLoginSvc.php        | `accountImport()`       | 导入单个帐号 |
+| ImOpenLoginSvc.php        | `multiAccountImport()`  | 导入多个帐号 |
+| ImOpenLoginSvc.php        | `accountDelete()`      | 删除帐号    |
+| ImOpenLoginSvc.php        | `accountCheck()`       | 查询帐号    |
+| ImOpenLoginSvc.php        | `kick()`               | 失效帐号登录态 |
+| ImOpenLoginSvc.php        | `queryState()`         | 查询帐号在线状态 |
 
 ### 快速使用
 在您开始之前，您需要注册腾讯云并获取您的[凭证](https://console.cloud.tencent.com)。
@@ -35,7 +35,7 @@ $ composer require cccdl/tencent_sdk
 ```php
 <?php
 
-use cccdl\tencent_sdk\Im\imOpenLoginSvc;
+use cccdl\tencent_sdk\Im\ImOpenLoginSvc;
 
 $im = new imOpenLoginSvc($appId, $key, $identifier);
 
