@@ -130,20 +130,20 @@ class imOpenLoginSvc extends Im
     /**
      * 查询帐号在线状态
      * 获取用户当前的登录状态。
-     * @param array $To_Account 需要查询这些 UserID 的登录状态，一次最多查询500个 UserID 的状态
-     * @param int $IsNeedDetail 是否需要返回详细的登录平台信息。0表示不需要，1表示需要
+     * @param array $toAccount 需要查询这些 UserID 的登录状态，一次最多查询500个 UserID 的状态
+     * @param int $isNeedDetail 是否需要返回详细的登录平台信息。0表示不需要，1表示需要
      * @return array
      * @throws cccdlException
      */
-    public function queryState(array $To_Account, $IsNeedDetail = 0)
+    public function queryState(array $toAccount, $isNeedDetail = 0)
     {
         $this->serviceName = 'openim';
         $this->command = 'querystate';
 
         $url = $this->getUrl();
 
-        $param['To_Account'] = $To_Account;
-        $param['IsNeedDetail'] = $IsNeedDetail;
+        $param['To_Account'] = $toAccount;
+        $param['IsNeedDetail'] = $isNeedDetail;
 
         return Request::post($url, $param);
     }

@@ -11,7 +11,7 @@ try {
 
     $im = new imOpenLoginSvc($appId, $key, $identifier);
 
-    $res = $im->accountCheck(['1000001', '1000002']);
+    $res = $im->accountCheck(['1000001', '1000002', '1000003', '1000004', '1000005']);
 
     var_dump($res['data']['ResultItem']);
 

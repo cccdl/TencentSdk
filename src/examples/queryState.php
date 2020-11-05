@@ -14,6 +14,7 @@ try {
     $res = $im->queryState(['1000001', '1000002']);
 
     var_dump($res);
+    var_dump($res['data']);
 
 } catch (cccdlException $e) {
     echo $e->getCode();

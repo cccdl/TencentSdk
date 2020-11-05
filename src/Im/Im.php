@@ -56,7 +56,7 @@ class Im
      * 用户名对应的密码
      * @var string
      */
-    private $userSig;
+    private $userSign;
 
     /**
      * 标识当前请求的随机数参数
@@ -88,7 +88,7 @@ class Im
         $this->sdkAppid = $sdkAppid;
         $this->key = $key;
         $this->identifier = $identifier;
-        $this->userSig = $this->getSign();
+        $this->userSign = $this->getSign();
         $this->random = $this->getRandom();
     }
 
@@ -105,7 +105,7 @@ class Im
             $this->command,
             $this->sdkAppid,
             $this->identifier,
-            $this->userSig,
+            $this->userSign,
             $this->random,
             $this->contentType,
         );
@@ -226,112 +226,110 @@ class Im
 
     /**
      * 带 userbuf 生成签名。
-     * @param string $userbuf 用户数据
+     * @param string $userBuf 用户数据
      * @param $userBufEnabled
      * @return string 签名字符串
      * @throws cccdlException
      */
-    public function genSigWithUserBuf($userbuf, $userBufEnabled)
+    public function genSigWithUserBuf(string $userBuf, $userBufEnabled)
     {
-        return $this->__genSig($userbuf, $userBufEnabled);
+        return $this->getSign($userBuf, $userBufEnabled);
     }
 
+    /**
+     * 带 userbuf 验证签名。
+     * @param string $sign 签名内容
+     * @param int $initTime 返回的生成时间，unix 时间戳
+     * @param string $errorMsg 失败时的错误信息
+     * @return boolean 验证是否成功
+     */
+    public function verifySig(string $sign, int &$initTime, string &$errorMsg)
+    {
+        $userBuf = '';
+        return $this->__verifySig($sign, $initTime, $errorMsg, $userbuf);
+    }
+
+    /**
+     * 验证签名
+     * @param string $sign 签名内容
+     * @param int $initTime 返回的生成时间，unix 时间戳
+     * @param string $errorMsg 失败时的错误信息
+     * @param string $userBuf 返回的用户数据
+     * @return boolean 验证是否成功
+     */
+    public function verifySigWithUserBuf(string $sign, int &$initTime, string &$errorMsg, string &$userBuf)
+    {
+        return $this->__verifySig($sign, $initTime, $errorMsg, $userBuf);
+    }
 
     /**
      * 验证签名。
-     *
-     * @param string $sig 签名内容
-     * @param int $init_time 返回的生成时间，unix 时间戳
-     * @param string $userbuf 返回的用户数据
-     * @param string $error_msg 失败时的错误信息
+     * @param string $sign 签名内容
+     * @param int $initTime 返回的生成时间，unix 时间戳
+     * @param string $errorMsg 失败时的错误信息
+     * @param string $userBuf 返回的用户数据
      * @return boolean 验证是否成功
      */
-    private function __verifySig($sig, &$init_time, &$userbuf, &$error_msg)
+    public function __verifySig(string $sign, int &$initTime, string &$errorMsg, string &$userBuf)
     {
-        try {
-            $error_msg = '';
-            $compressed_sig = $this->base64UrlDecode($sig);
-            $pre_level = error_reporting(E_ERROR);
-            $uncompressed_sig = gzuncompress($compressed_sig);
-            error_reporting($pre_level);
+        $userBuf = '';
 
-            if ($uncompressed_sig === false) {
+        try {
+            $errorMsg = '';
+            $compressedSig = $this->base64UrlDecode($sign);
+            $preLevel = error_reporting(E_ERROR);
+            $uncompressedSig = gzuncompress($compressedSig);
+            error_reporting($preLevel);
+
+            if ($uncompressedSig === false) {
                 throw new cccdlException('gzuncompress error');
             }
 
-            $sig_doc = json_decode($uncompressed_sig);
-            if ($sig_doc == false) {
+            $signDoc = json_decode($uncompressedSig);
+            if ($signDoc == false) {
                 throw new cccdlException('json_decode error');
             }
 
-            $sig_doc = (array)$sig_doc;
-            if ($sig_doc['TLS.identifier'] !== $this->identifier) {
+            $signDoc = (array)$signDoc;
+            if ($signDoc['TLS.identifier'] !== $this->identifier) {
                 throw new cccdlException("identifier dosen't match");
             }
 
-            if ($sig_doc['TLS.sdkAppid'] != $this->sdkAppid) {
+            if ($signDoc['TLS.sdkappid'] != $this->sdkAppid) {
                 throw new cccdlException("sdkAppid dosen't match");
             }
 
-            $sig = $sig_doc['TLS.sig'];
-            if ($sig == false) {
+            $sign = $signDoc['TLS.sig'];
+            if ($sign == false) {
                 throw new cccdlException('sig field is missing');
             }
 
-            $init_time = $sig_doc['TLS.time'];
-            $expire_time = $sig_doc['TLS.expire'];
+            $initTime = $signDoc['TLS.time'];
+            $expireTime = $signDoc['TLS.expire'];
 
-            $curr_time = time();
-            if ($curr_time > $init_time + $expire_time) {
+            $currTime = time();
+            if ($currTime > $initTime + $expireTime) {
                 throw new cccdlException('sig expired');
             }
 
             $userBufEnabled = false;
-            $base64_userbuf = '';
-            if (isset($sig_doc['TLS.userbuf'])) {
-                $base64_userbuf = $sig_doc['TLS.userbuf'];
-                $userbuf = base64_decode($base64_userbuf);
+            $base64UserBuf = '';
+            if (isset($signDoc['TLS.userbuf'])) {
+                $base64UserBuf = $signDoc['TLS.userbuf'];
+                $userBuf = base64_decode($base64UserBuf);
                 $userBufEnabled = true;
             }
-            $sigCalculated = $this->hmacsha256($init_time, $base64_userbuf, $userBufEnabled);
+            $sigCalculated = $this->hmacsha256($initTime, $base64UserBuf, $userBufEnabled);
 
-            if ($sig != $sigCalculated) {
+            if ($sign != $sigCalculated) {
                 throw new cccdlException('verify failed');
             }
 
             return true;
         } catch (cccdlException $ex) {
-            $error_msg = $ex->getMessage();
+            $errorMsg = $ex->getMessage();
             return false;
         }
-    }
-
-
-    /**
-     * 带 userbuf 验证签名。
-     *
-     * @param string $sig 签名内容
-     * @param int $init_time 返回的生成时间，unix 时间戳
-     * @param string $error_msg 失败时的错误信息
-     * @return boolean 验证是否成功
-     */
-    public function verifySig($sig, &$init_time, &$error_msg)
-    {
-        $userbuf = '';
-        return $this->__verifySig($sig, $init_time, $userbuf, $error_msg);
-    }
-
-    /**
-     * 验证签名
-     * @param string $sig 签名内容
-     * @param int $init_time 返回的生成时间，unix 时间戳
-     * @param string $userbuf 返回的用户数据
-     * @param string $error_msg 失败时的错误信息
-     * @return boolean 验证是否成功
-     */
-    public function verifySigWithUserBuf($sig, &$init_time, &$userbuf, &$error_msg)
-    {
-        return $this->__verifySig($sig, $init_time, $userbuf, $error_msg);
     }
 
 
