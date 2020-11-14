@@ -39,6 +39,7 @@ $ composer require cccdl/tencent_sdk
 | ImOpenLoginSvc.php        | `kick()`               | 失效帐号登录态 |
 | ImOpenLoginSvc.php        | `queryState()`         | 查询帐号在线状态 |
 | OpenIm.php                | `sendMsg()`         | 单发单聊消息 |
+| OpenIm.php                | `batchSendMsg()`         | 批量发单聊消息 |
 
 ### 快速使用
 在您开始之前，您需要注册腾讯云并获取您的[凭证](https://console.cloud.tencent.com)。

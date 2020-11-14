@@ -122,4 +122,44 @@ class OpenIm extends Im
         return $this->post($url, $param);
 
     }
+
+    /**
+     * 支持一次对最多500个用户进行单发消息。
+     * 与单发消息相比，该接口更适用于营销类消息、系统通知 tips 等时效性较强的消息。
+     * 管理员指定某一帐号向目标帐号批量发消息，接收方看到发送者不是管理员，而是管理员指定的帐号。
+     * 该接口不触发回调请求。
+     * 该接口不会检查发送者和接收者的好友关系（包括黑名单），同时不会检查接收者是否被禁言。
+     * @param string $fromAccount
+     * @param array $toAccount
+     * @param string $type
+     * @param array $msgBody
+     * @param array $options
+     * @return array
+     * @throws cccdlException
+     */
+    public function batchSendMsg(string $fromAccount, array $toAccount, string $type, array $msgBody, array $options = [])
+    {
+        $this->command = 'batchsendmsg';
+
+        $url = $this->getUrl();
+
+        $time = time();
+
+        $param = [
+            'From_Account' => $fromAccount,
+            'To_Account' => $toAccount,
+            'MsgRandom' => $time,
+            'MsgBody' => [
+                [
+                    'MsgType' => $type,
+                    'MsgContent' => $msgBody
+                ]
+            ]
+        ];
+
+        //合并额外参数
+        $param = array_merge($param, $options);
+
+        return $this->post($url, $param);
+    }
 }

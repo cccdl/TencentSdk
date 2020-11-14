@@ -13,29 +13,13 @@ try {
 
 
     //额外配置参数 不需要直接去除就好了
+    //TODO 批量发送没有 MsgLifeTime、MsgTimeStamp、批量发送没有这个字段
     $options = [
 
         //1：把消息同步到 From_Account 在线终端和漫游上
         //2：消息不同步至 From_Account
         //若不填写默认情况下会将消息存 From_Account 漫游
         'SyncOtherMachine' => 1,
-
-        //消息离线保存时长（单位：秒），最长为7天（604800秒）
-        //若设置该字段为0，则消息只发在线用户，不保存离线
-        //若设置该字段超过7天（604800秒），仍只保存7天
-        //若不设置该字段，则默认保存7天
-        'MsgLifeTime' => 604800,
-
-        //消息时间戳，UNIX 时间戳（单位：秒）
-        'MsgTimeStamp' => time(),
-
-        //消息回调禁止开关，只对本条消息有效，
-        //ForbidBeforeSendMsgCallback 表示禁止发消息前回调，
-        //ForbidAfterSendMsgCallback 表示禁止发消息后回调
-        'ForbidCallbackControl' => [
-            'ForbidBeforeSendMsgCallback',
-            'ForbidAfterSendMsgCallback',
-        ],
 
         //离线推送信息配置，具体可参考
         'OfflinePushInfo' => [
@@ -94,7 +78,7 @@ try {
     $msg = [
         'Text' => 'hello world11111111111'
     ];
-    $res = $im->sendMsg('1000001', 'user5', OpenIm::TXT, $msg, $options);
+    $res = $im->batchSendMsg('1000001', ['user5', 'user1'], OpenIm::TXT, $msg, $options);
     var_dump($res);
     var_dump($res['data']);
 
@@ -104,7 +88,7 @@ try {
         'Latitude' => 29.340656774469956,
         'Longitude' => 116.77497920478824
     ];
-    $res = $im->sendMsg('1000001', 'user5', OpenIm::LOCATION, $msg, $options);
+    $res = $im->batchSendMsg('1000001', ['user5', 'user1'], OpenIm::LOCATION, $msg, $options);
     var_dump($res);
     var_dump($res['data']);
 
@@ -113,7 +97,7 @@ try {
         'Index' => 1,
         'Data' => 'content'
     ];
-    $res = $im->sendMsg('1000001', 'user5', OpenIm::FACE, $msg, $options);
+    $res = $im->batchSendMsg('1000001', ['user5', 'user1'], OpenIm::FACE, $msg, $options);
     var_dump($res);
     var_dump($res['data']);
 
@@ -124,7 +108,7 @@ try {
         'Ext' => 'url',
         'Sound' => 'dingdong.aiff'
     ];
-    $res = $im->sendMsg('1000001', 'user5', OpenIm::CUSTOM, $msg, $options);
+    $res = $im->batchSendMsg('1000001', ['user5', 'user1'], OpenIm::CUSTOM, $msg, $options);
     var_dump($res);
     var_dump($res['data']);
 
