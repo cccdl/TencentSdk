@@ -2,6 +2,8 @@
 
 namespace cccdl\tencent_sdk\Im;
 
+use cccdl\tencent_sdk\Exception\cccdlException;
+
 /**
  * 单聊信息
  * Class OpenIm
@@ -9,6 +11,21 @@ namespace cccdl\tencent_sdk\Im;
  */
 class OpenIm extends Im
 {
+    //文本消息
+    const TXT = 'TIMTextElem';
+    //表情消息
+    const FACE = 'TIMFaceElem';
+    //位置消息
+    const LOCATION = 'TIMLocationElem';
+    //自定义消息
+    const CUSTOM = 'TIMCustomElem';
+
+    /**
+     * 内部服务名，不同的 serviceName 对应不同的服务类型
+     * @var string
+     */
+    protected $serviceName = 'openim';
+
     /**
      * 管理员向帐号发消息，接收方看到消息发送者是管理员。
      * 管理员指定某一帐号向其他帐号发消息，接收方看到发送者不是管理员，而是管理员指定的帐号。
@@ -68,9 +85,41 @@ class OpenIm extends Im
      * - OfflinePushInfo Object 选填
      *   离线推送信息配置，具体可参考 消息格式描述
      *   https://cloud.tencent.com/document/product/269/2720
+     *
+     *
+     * @param string $fromAccount 发送方
+     * @param string $toAccount 接收方
+     * @param string $type 消息类型
+     * @param array $msgBody 消息体
+     * @param array $options 额外配置参数
+     * @return array
+     * @throws cccdlException
      */
-    public function sendMsg()
+    public function sendMsg(string $fromAccount, string $toAccount, string $type, array $msgBody, array $options = [])
     {
+        $this->command = 'sendmsg';
+
+        $url = $this->getUrl();
+
+        $time = time();
+
+        $param = [
+            'From_Account' => $fromAccount,
+            'To_Account' => $toAccount,
+            'MsgRandom' => $time,
+            'MsgTimeStamp' => $time,
+            'MsgBody' => [
+                [
+                    'MsgType' => $type,
+                    'MsgContent' => $msgBody
+                ]
+            ]
+        ];
+
+        //合并额外参数
+        $param = array_merge($param, $options);
+
+        return $this->post($url, $param);
 
     }
 }
