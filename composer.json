@@ -1,6 +1,6 @@
 {
     "name": "cccdl/tencent_im_sdk",
-    "description": "腾讯云SDK for PHP",
+    "description": "腾讯云IM SDK for PHP",
     "type": "library",
     "license": "MIT",
     "authors": [
