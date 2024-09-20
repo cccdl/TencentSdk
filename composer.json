@@ -1,5 +1,5 @@
 {
-    "name": "cccdl/tencent_sdk",
+    "name": "cccdl/tencent_im_sdk",
     "description": "腾讯云SDK for PHP",
     "type": "library",
     "license": "MIT",
@@ -18,7 +18,7 @@
     },
     "autoload": {
         "psr-4": {
-            "cccdl\\tencent_sdk\\": "./src/"
+            "cccdl\\tencent_im_sdk\\": "./src/"
         }
     }
 }

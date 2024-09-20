@@ -1,9 +1,9 @@
 <?php
 
-namespace cccdl\tencent_sdk\Traits;
+namespace cccdl\tencent_im_sdk\Traits;
 
 
-use cccdl\tencent_sdk\Exception\cccdlException;
+use cccdl\tencent_im_sdk\Exception\cccdlException;
 use GuzzleHttp\Client;
 
 trait Request

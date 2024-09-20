@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace cccdl\tencent_sdk\Im;
+namespace cccdl\tencent_im_sdk\Im;
 
-use cccdl\tencent_sdk\Exception\cccdlException;
-use cccdl\tencent_sdk\Traits\Request;
+use cccdl\tencent_im_sdk\Exception\cccdlException;
+use cccdl\tencent_im_sdk\Traits\Request;
 
 class Im
 {

@@ -3,8 +3,8 @@
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/comfig.php';
 
-use cccdl\tencent_sdk\Exception\cccdlException;
-use cccdl\tencent_sdk\Im\Im;
+use cccdl\tencent_im_sdk\Exception\cccdlException;
+use cccdl\tencent_im_sdk\Im\Im;
 
 try {
 

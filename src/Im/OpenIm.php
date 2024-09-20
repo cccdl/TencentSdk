@@ -1,13 +1,13 @@
 <?php
 
-namespace cccdl\tencent_sdk\Im;
+namespace cccdl\tencent_im_sdk\Im;
 
-use cccdl\tencent_sdk\Exception\cccdlException;
+use cccdl\tencent_im_sdk\Exception\cccdlException;
 
 /**
  * 单聊信息
  * Class OpenIm
- * @package cccdl\tencent_sdk\Im
+ * @package cccdl\tencent_im_sdk\Im
  */
 class OpenIm extends Im
 {

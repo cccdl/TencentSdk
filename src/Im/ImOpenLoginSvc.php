@@ -1,15 +1,15 @@
 <?php
 
-namespace cccdl\tencent_sdk\Im;
+namespace cccdl\tencent_im_sdk\Im;
 
 
-use cccdl\tencent_sdk\Exception\cccdlException;
+use cccdl\tencent_im_sdk\Exception\cccdlException;
 
 
 /**
  * 账号管理
  * Class imOpenLoginSvc
- * @package cccdl\tencent_sdk\Im
+ * @package cccdl\tencent_im_sdk\Im
  */
 class ImOpenLoginSvc extends Im
 {

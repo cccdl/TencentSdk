@@ -25,7 +25,7 @@
 ## 安装
 > 运行环境要求PHP7.1+。
 ```shell
-$ composer require cccdl/tencent_sdk
+$ composer require cccdl/tencent_im_sdk
 ```
 
 ### 接口对应文件
@@ -48,7 +48,7 @@ $ composer require cccdl/tencent_sdk
 ```php
 <?php
 
-use cccdl\tencent_sdk\Im\ImOpenLoginSvc;
+use cccdl\tencent_im_sdk\Im\ImOpenLoginSvc;
 
 $im = new imOpenLoginSvc($appId, $key, $identifier);
 
@@ -60,15 +60,16 @@ $res = $im->queryState(['1000001', '1000002']);
 [腾讯云文档中心](https://cloud.tencent.com/document/product)
 
 ## 问题
-[提交 Issue](https://github.com/cccdl/tencent_sdk/issues)，不符合指南的问题可能会立即关闭。
+
+[提交 Issue](https://github.com/cccdl/tencent_im_sdk/issues)，不符合指南的问题可能会立即关闭。
 
 
 ## Contributing
 
 You can contribute in one of three ways:
 
-1. File bug reports using the [issue tracker](https://github.com/cccdl/tencent_sdk/issues).
-2. Answer questions or fix bugs on the [issue tracker](https://github.com/cccdl/tencent_sdk/issues).
+1. File bug reports using the [issue tracker](https://github.com/cccdl/tencent_im_sdk/issues).
+2. Answer questions or fix bugs on the [issue tracker](https://github.com/cccdl/tencent_im_sdk/issues).
 3. Contribute new features or update the wiki.
 
 _The code contribution process is not very formal. You just need to make sure that you follow the PSR-0, PSR-1, and PSR-2 coding guidelines. Any new code contributions must be accompanied by unit tests where applicable._
